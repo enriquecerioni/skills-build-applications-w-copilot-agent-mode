@@ -30,13 +30,13 @@ OctoFit Tracker is a three-tier application for a school fitness program. The st
 
 Record your plan here before editing code.
 
-- Presentation tier decision:
-- Logic tier decision:
-- Data tier decision:
-- Activity tracking approach:
-- Team management approach:
-- Leaderboard approach:
-- Workout suggestions approach:
+- Presentation tier decision: a `useApiData` hook and a generic `CapabilityCard` provide loading (`role="status"`), empty, success, and error (`role="alert"`) states; each page only declares its endpoint and rendering.
+- Logic tier decision: explicit service functions in `octofitService.ts` validate input and throw errors with a `status`; routes stay thin and the error middleware returns the status.
+- Data tier decision: Mongoose schemas enforce required fields; `members` defaults to an empty array; user emails are stored lowercase.
+- Activity tracking approach: validate well-formed ids, positive `minutes`, and a non-empty `type`; 404 when the user or team does not exist; `points` equal the rounded minutes and `occurredAt` is the creation time.
+- Team management approach: require `name` and `mascot` (400 otherwise) and validate member ids.
+- Leaderboard approach: aggregate activity points per team, sort descending (ties by name), and assign a 1-based `rank`.
+- Workout suggestions approach: look up the user by email (404 if unknown); derive focus from the latest activity type, falling back to the user's goal; rank matching workouts first and add a `reason`.
 
 ## Test plan
 
@@ -47,3 +47,11 @@ Record the commands you run and what each failure means.
 - Frontend command: `npm test --prefix octofit-tracker/frontend`
 - Backend build command: `npm run build --prefix octofit-tracker/backend`
 - Frontend build command: `npm run build --prefix octofit-tracker/frontend`
+
+## Test results
+
+- `npm run test:data --prefix octofit-tracker/backend`: 5 of 5 passing.
+- `npm run test:api --prefix octofit-tracker/backend`: 4 of 4 passing.
+- `npm test --prefix octofit-tracker/frontend`: 15 of 15 passing.
+- Both builds compile.
+- Manual check against the API on port 8000: `GET /api/activities` returns 200 and `POST /api/activities` with `{}` returns 400.

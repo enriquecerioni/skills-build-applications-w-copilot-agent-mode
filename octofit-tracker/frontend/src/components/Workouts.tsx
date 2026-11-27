@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { CapabilityCard } from './CapabilityCard.js';
 import { useApiData } from '../hooks/useApiData.js';
-import { apiPaths } from '../api/client.js';
+import { apiPaths, getJson } from '../api/client.js';
 
 type Suggestion = { _id?: string; title: string; focus?: string; reason: string };
 
 export default function Workouts() {
   const [draft, setDraft] = useState('mona@example.com');
   const [email, setEmail] = useState('mona@example.com');
-  const state = useApiData<{ suggestions: Suggestion[] }>(apiPaths.workoutSuggestions(email));
+  const state = useApiData(() => getJson<{ suggestions: Suggestion[] }>(apiPaths.workoutSuggestions(email)), email);
   return (
     <>
       <form className="mb-3" onSubmit={(event) => { event.preventDefault(); if (draft.trim()) setEmail(draft.trim()); }}>

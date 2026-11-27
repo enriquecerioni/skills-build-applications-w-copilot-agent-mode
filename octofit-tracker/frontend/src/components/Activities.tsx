@@ -1,11 +1,11 @@
 import { CapabilityCard } from './CapabilityCard.js';
 import { useApiData } from '../hooks/useApiData.js';
-import { apiPaths } from '../api/client.js';
+import { apiPaths, getJson } from '../api/client.js';
 
 type Activity = { _id?: string; type: string; minutes: number; points: number; occurredAt?: string };
 
 export default function Activities() {
-  const state = useApiData<{ activities: Activity[] }>(apiPaths.activities());
+  const state = useApiData(() => getJson<{ activities: Activity[] }>(apiPaths.activities()), apiPaths.activities());
   return (
     <CapabilityCard title="Activities" description="Track student activity minutes and points." state={state} isEmpty={(data) => data.activities.length === 0} emptyMessage="No activities recorded yet.">
       {(data) => (

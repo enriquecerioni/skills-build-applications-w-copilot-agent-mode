@@ -47,3 +47,11 @@ Record the commands you run and what each failure means.
 - Frontend command: `npm test --prefix octofit-tracker/frontend`
 - Backend build command: `npm run build --prefix octofit-tracker/backend`
 - Frontend build command: `npm run build --prefix octofit-tracker/frontend`
+
+## Test results
+
+- `npm run test:data --prefix octofit-tracker/backend`: 5 of 5 passing.
+- `npm run test:api --prefix octofit-tracker/backend`: 4 of 4 passing.
+- `npm test --prefix octofit-tracker/frontend`: 15 of 15 passing.
+- Both builds compile.
+- Manual check against the API on port 8000: `GET /api/activities` returns 200 and `POST /api/activities` with `{}` returns 400.

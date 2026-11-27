@@ -29,11 +29,24 @@ export async function seed() {
       { $set: { name: 'Robocats', mascot: 'Hubot' } },
       { upsert: true, new: true, setDefaultsOnInsert: true },
     );
+    const codecats = await Team.findOneAndUpdate(
+      { name: 'Codecats' },
+      { $set: { name: 'Codecats', mascot: 'Copilot' } },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
+    await Team.findOneAndUpdate(
+      { name: 'Pixelcats' },
+      { $set: { name: 'Pixelcats', mascot: 'Pixel' } },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
     const mona = await upsertDemoUser('Mona', 'mona@example.com', octocats._id, 'endurance');
     const hubot = await upsertDemoUser('Hubot', 'hubot@example.com', robocats._id, 'strength');
 
+    const copilot = await upsertDemoUser('Copilot', 'copilot@example.com', codecats._id, 'mobility');
+
     const monaRunAt = new Date('2026-01-10T12:00:00.000Z');
     const hubotCycleAt = new Date('2026-01-11T12:00:00.000Z');
+    const copilotStretchAt = new Date('2026-01-12T12:00:00.000Z');
     await Activity.updateOne(
       { user: mona._id, team: octocats._id, type: 'run', occurredAt: monaRunAt },
       { $set: { user: mona._id, team: octocats._id, type: 'run', minutes: 40, points: 40, occurredAt: monaRunAt } },
@@ -42,6 +55,16 @@ export async function seed() {
     await Activity.updateOne(
       { user: hubot._id, team: robocats._id, type: 'cycle', occurredAt: hubotCycleAt },
       { $set: { user: hubot._id, team: robocats._id, type: 'cycle', minutes: 25, points: 25, occurredAt: hubotCycleAt } },
+      { upsert: true },
+    );
+    await Activity.updateOne(
+      { user: copilot._id, team: codecats._id, type: 'stretch', occurredAt: copilotStretchAt },
+      { $set: { user: copilot._id, team: codecats._id, type: 'stretch', minutes: 20, points: 20, occurredAt: copilotStretchAt } },
+      { upsert: true },
+    );
+    await Workout.updateOne(
+      { title: 'Mobility Flow' },
+      { $set: { title: 'Mobility Flow', focus: 'mobility', minutes: 20, difficulty: 'easy' } },
       { upsert: true },
     );
     await Workout.updateOne(

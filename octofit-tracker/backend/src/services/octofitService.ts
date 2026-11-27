@@ -27,8 +27,8 @@ export async function createActivity(input: unknown) {
   const type = typeof body.type === 'string' ? body.type.trim() : '';
   const minutes = body.minutes;
   if (!type) throw badRequest('type is required');
-  if (typeof minutes !== 'number' || !Number.isFinite(minutes) || minutes <= 0) {
-    throw badRequest('minutes must be a positive number');
+  if (typeof minutes !== 'number' || !Number.isFinite(minutes) || minutes < 1) {
+    throw badRequest('minutes must be a number of at least 1');
   }
   const [user, team] = await Promise.all([User.exists({ _id: userId }), Team.exists({ _id: teamId })]);
   if (!user) throw badRequest('user not found', 404);
